@@ -1,16 +1,27 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
+using EnvDTE80;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
+using Microsoft.SqlServer.Management.UI.VSIntegration.ObjectExplorer;
+using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using System.Linq;
+using SSMSTools.Managers.Interfaces;
+using SSMSTools.Windows.MultiDbQueryRunner;
+using SSMSTools.Models;
 
 namespace SSMSTools.Commands.MultiDbQueryRunner
 {
     internal sealed class MultiDbQueryRunnerCommand
     {
+        private readonly IObjectExplorerService _objectExplorerService;
+        private readonly IMessageManager _messageManager;
+        private readonly DTE2 _dte;
+
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -39,6 +50,11 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
+
+            _objectExplorerService = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IObjectExplorerService)) as IObjectExplorerService;
+            _messageManager = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IMessageManager)) as IMessageManager;
+            _dte = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(DTE2)) as DTE2;
+
             commandService.AddCommand(menuItem);
         }
 
@@ -88,15 +104,87 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             ThreadHelper.ThrowIfNotOnUIThread();
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             string title = "MultiDbQueryRunner";
+            IEnumerable<CheckboxItem> databases = Enumerable.Empty<CheckboxItem>();
 
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            try
+            {
+                var connections = GetConnectedServers();
+                var connectionDatabases = GetDatabasesFromConnection(connections.Single());
+                if (!connectionDatabases.Any())
+                {
+                    // Show a message box to prove we were here
+                    _messageManager.ShowMessageBox(this.package, title, "The connection has no available databases");
+                    return;
+                }
+
+                databases = connectionDatabases.Select(x => new CheckboxItem { Name = x });
+            }
+            catch(Exception ex)
+            {
+                _messageManager.ShowMessageBox(this.package, title, "Only one node needs to be selected");
+                return;
+            }
+
+            var window = new MultiDbQueryRunnerWindow();
+            window.SetItems(databases);
+            window.SetEnvDte(_dte);
+            window.Show();
+        }
+
+        private List<string> GetConnectedServers()
+        {
+            var usedConnections = new HashSet<string>();
+
+            int arraySize;
+            INodeInformation[] nodes = new INodeInformation[10];
+            _objectExplorerService.GetSelectedNodes(out arraySize, out nodes);
+            if (arraySize != 1)
+            {
+                throw new Exception("Only one node needs to be selected");
+            }
+            foreach (var node in nodes)
+            {
+                var connectionString = node.Connection.ConnectionString;
+                if (usedConnections.Contains(connectionString))
+                {
+                    continue;
+                }
+
+                usedConnections.Add(connectionString);
+            }
+
+            return new List<string>(usedConnections);
+        }
+
+        private List<string> GetDatabasesFromConnection(string connectionString)
+        {
+            var databases = new List<string>();
+
+            try
+            {
+                string query = $"SELECT name FROM sys.databases";
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var command = new SqlCommand(query, conn))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                databases.Add(reader["name"].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., permissions, connectivity)
+                System.Windows.Forms.MessageBox.Show($"Error fetching databases for linked server: {ex.Message}");
+            }
+
+            return databases;
         }
     }
 }

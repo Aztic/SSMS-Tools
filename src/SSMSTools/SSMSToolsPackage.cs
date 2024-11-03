@@ -44,6 +44,8 @@ namespace SSMSTools
         /// SSMSToolsPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "b9f474c1-a282-4160-a9fa-80ff4d5b6a08";
+        private System.IServiceProvider _serviceProvider;
+        public System.IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SSMSToolsPackage"/> class.
@@ -67,6 +69,9 @@ namespace SSMSTools
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            var startup = new Startup(this);
+            _serviceProvider = startup.ConfigureServices();
+
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);

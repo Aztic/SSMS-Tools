@@ -39,7 +39,7 @@
                  VerticalScrollBarVisibility="Auto"
                  Height="100"
                  Margin="0,10,0,0"
-                 Text="{Binding Notes, Mode=TwoWay}"/>
+                 Text="{Binding QueryContent, Mode=TwoWay}"/>
 
             <!-- Action buttons -->
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">

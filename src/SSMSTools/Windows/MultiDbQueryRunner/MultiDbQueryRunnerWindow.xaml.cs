@@ -7,24 +7,18 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SSMSTools.Windows.MultiDbQueryRunner
 {
     public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged
     {
-        public MultiDbQueryRunnerWindow()
-        {
-            InitializeComponent();
-            DataContext = this;
-        }
-
-        private DTE2 _dte;
-        public ObservableCollection<CheckboxItem> Items { get; set; }
+        public ObservableCollection<CheckboxItem> Items { get; private set; }
 
         private bool _isAllSelected;
         private bool _isUpdating;
+        private string _queryContent;
+        private DTE2 _dte;
 
         public bool IsAllSelected
         {
@@ -44,16 +38,21 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
                 }
             }
         }
-
-        private string _notes;
-        public string Notes
+        
+        public string QueryContent
         {
-            get => _notes;
+            get => _queryContent;
             set
             {
-                _notes = value;
-                OnPropertyChanged(nameof(Notes));
+                _queryContent = value;
+                OnPropertyChanged(nameof(QueryContent));
             }
+        }
+
+        public MultiDbQueryRunnerWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
         }
 
         public void SetItems(IEnumerable<CheckboxItem> items)
@@ -104,7 +103,6 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         private void ExecuteButton_Click(object sender, RoutedEventArgs e)
         {
             // Implement the logic to handle the "Execute" action
-            MessageBox.Show("Execute button clicked. Notes: " + Notes);
             var content = new StringBuilder();
             foreach (var database in Items)
             {
@@ -112,25 +110,23 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
                 {
                     content.Append($"USE {database.Name}\n");
                     content.Append($"Print 'Running query in {database.Name}'\n");
-                    content.Append(Notes);
+                    content.Append(QueryContent);
                     content.Append("\n\n");
 
                 }
             }
             OpenNewQueryWindow(content.ToString());
-            CloseToolWindow();
+            Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            // Implement the logic to handle the "Cancel" action, e.g., clearing fields or closing the window
-            MessageBox.Show("Cancel button clicked. Clearing fields...");
-            Notes = string.Empty; // Clear the multiline text
+            QueryContent = string.Empty;
             foreach (var item in Items)
             {
-                item.IsSelected = false; // Uncheck all items
+                item.IsSelected = false;
             }
-            CloseToolWindow();
+            Close();
         }
 
         private void OpenNewQueryWindow(string content)
@@ -160,11 +156,6 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             {
                 MessageBox.Show($"Error creating new query window: {ex.Message}");
             }
-        }
-
-        private void CloseToolWindow()
-        {
-            System.Windows.Window.GetWindow(this).Close();
         }
     }
 }
