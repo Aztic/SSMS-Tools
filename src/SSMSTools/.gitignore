@@ -1,0 +1,85 @@
+# Ignore the build output directory (bin and obj folders)
+bin/
+obj/
+
+# Ignore temporary files and directories
+*.tmp
+*.temp
+*.log
+
+# Ignore user-specific files
+*.user
+*.rsuser
+*.suo
+*.sln.docstates
+
+# Ignore build artifacts for .NET projects
+*.pdb
+*.cache
+*.ilk
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.unsuccessfulbuild
+*.suo
+
+# Ignore test result files
+TestResults/
+*.trx
+*.Coverage
+
+# Ignore publish output (for VSIX project specifically)
+**/*.vsix
+**/*.vsixmanifest
+
+# Ignore config transformations
+*.debug.*
+*.release.*
+
+# Ignore Visual Studio Code settings (if you occasionally open the project in VS Code)
+.vscode/
+
+# Ignore any ReSharper files (if you use ReSharper)
+_ReSharper*/
+*.DotSettings.user
+
+# Ignore NuGet packages
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore .NET Core-specific files (if the project is multi-targeting)
+*.lock.json
+*.lock
+
+# Ignore dependency caches and generated files
+node_modules/
+jspm_packages/
+bower_components/
+
+# Ignore build logs
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Ignore package configurations
+appsettings*.json
+
+# Ignore Azure Pipelines, GitHub Actions, or other CI/CD configs (optional)
+!.github/
+!.azure-pipelines/
+!.gitlab-ci.yml
+.circleci/
+
+# Ignore Rider specific files (JetBrains Rider IDE)
+.idea/
+
+# Ignore Visual Studio Installer Project outputs (optional)
+.vsixinstaller
+.vsixbundle
+
+# Ignore key file
+*.snk
