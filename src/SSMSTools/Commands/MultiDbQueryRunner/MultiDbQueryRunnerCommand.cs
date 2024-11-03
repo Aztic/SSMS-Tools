@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace SSMSTools.Commands.MultiDbQueryRunner
 {
-    internal sealed class MultiDbQueryRunner
+    internal sealed class MultiDbQueryRunnerCommand
     {
         /// <summary>
         /// Command ID.
@@ -27,12 +27,12 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         private readonly AsyncPackage package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultiDbQueryRunner"/> class.
+        /// Initializes a new instance of the <see cref="MultiDbQueryRunnerCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private MultiDbQueryRunner(AsyncPackage package, OleMenuCommandService commandService)
+        private MultiDbQueryRunnerCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -45,7 +45,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static MultiDbQueryRunner Instance
+        public static MultiDbQueryRunnerCommand Instance
         {
             get;
             private set;
@@ -73,7 +73,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
-            Instance = new MultiDbQueryRunner(package, commandService);
+            Instance = new MultiDbQueryRunnerCommand(package, commandService);
         }
 
         /// <summary>
