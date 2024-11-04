@@ -6,7 +6,7 @@ Set of tools to improve my own experience using SSMS
 
 ## Tools
 - Multi Db Query runner
-[![plot](./assets/multi_db_query_runner_demo.png)](./assets/multi_db_query_runner_demo.mp4)
+[Demo](https://github.com/user-attachments/assets/cfe159fe-98b8-4e32-861d-cbc3b4f20214)
 
 Generates a query to be executed in the selected databases of the server
 
