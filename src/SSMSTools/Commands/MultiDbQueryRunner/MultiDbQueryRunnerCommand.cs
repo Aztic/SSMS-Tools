@@ -101,7 +101,6 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             string title = "MultiDbQueryRunner";
             IEnumerable<CheckboxItem> databases = Enumerable.Empty<CheckboxItem>();
 
