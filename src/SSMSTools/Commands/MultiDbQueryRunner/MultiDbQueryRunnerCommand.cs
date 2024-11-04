@@ -128,7 +128,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
                 return;
             }
 
-            var window = _windowFactory.CreateWindow<IMultiDbQueryRunnerWIndow>();
+            var window = _windowFactory.CreateWindow<IMultiDbQueryRunnerWindow>();
             window.SetItems(databases);
             window.Show();
         }

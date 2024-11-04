@@ -68,7 +68,7 @@
     <Compile Include="SSMSToolsPackage.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Windows\Interfaces\IBaseWindow.cs" />
-    <Compile Include="Windows\Interfaces\IMultiDbQueryRunnerWIndow.cs" />
+    <Compile Include="Windows\Interfaces\IMultiDbQueryRunnerWindow.cs" />
     <Compile Include="Windows\MultiDbQueryRunner\MultiDbQueryRunnerWindow.xaml.cs">
       <DependentUpon>MultiDbQueryRunnerWindow.xaml</DependentUpon>
     </Compile>

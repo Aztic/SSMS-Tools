@@ -57,7 +57,7 @@ namespace SSMSTools
 
         private void RegisterWindows(IServiceCollection services)
         {
-            services.AddTransient<IMultiDbQueryRunnerWIndow, MultiDbQueryRunnerWindow>();
+            services.AddTransient<IMultiDbQueryRunnerWindow, MultiDbQueryRunnerWindow>();
         }
 
         private void RegisterFactories(IServiceCollection services)

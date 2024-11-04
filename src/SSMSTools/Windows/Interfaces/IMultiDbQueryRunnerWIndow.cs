@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SSMSTools.Windows.Interfaces
 {
-    internal interface IMultiDbQueryRunnerWIndow: IBaseWindow
+    internal interface IMultiDbQueryRunnerWindow: IBaseWindow
     {
         void SetItems(IEnumerable<CheckboxItem> items);
     }

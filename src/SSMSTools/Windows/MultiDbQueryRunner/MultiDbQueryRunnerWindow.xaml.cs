@@ -13,7 +13,7 @@ using System.Windows;
 
 namespace SSMSTools.Windows.MultiDbQueryRunner
 {
-    public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged, IMultiDbQueryRunnerWIndow
+    public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged, IMultiDbQueryRunnerWindow
     {
         public ObservableCollection<CheckboxItem> Items { get; private set; }
 
