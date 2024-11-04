@@ -1,16 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 using SSMSTools.Commands.MultiDbQueryRunner;
 using Task = System.Threading.Tasks.Task;
 
@@ -44,6 +36,8 @@ namespace SSMSTools
         /// SSMSToolsPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "b9f474c1-a282-4160-a9fa-80ff4d5b6a08";
+        private System.IServiceProvider _serviceProvider;
+        public System.IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SSMSToolsPackage"/> class.
@@ -67,10 +61,13 @@ namespace SSMSTools
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            var startup = new Startup(this);
+            _serviceProvider = startup.ConfigureServices();
+
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            await MultiDbQueryRunner.InitializeAsync(this);
+            await MultiDbQueryRunnerCommand.InitializeAsync(this);
         }
 
         #endregion

@@ -56,7 +56,7 @@
         <Parent guid="guidSSMSToolsPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Invoke MultiDbQueryRunner</ButtonText>
+          <ButtonText>Run query in multiple Databases</ButtonText>
         </Strings>
       </Button>
     </Buttons>
