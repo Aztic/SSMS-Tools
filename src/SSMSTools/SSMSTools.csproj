@@ -58,12 +58,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\MultiDbQueryRunner\MultiDbQueryRunnerCommand.cs" />
+    <Compile Include="Exceptions\OnlyOneObjectExplorerNodeAllowedException.cs" />
+    <Compile Include="Factories\Interfaces\IWindowFactory.cs" />
+    <Compile Include="Factories\WindowFactory.cs" />
     <Compile Include="Managers\Interfaces\IMessageManager.cs" />
     <Compile Include="Managers\MessageManager.cs" />
     <Compile Include="Models\CheckboxItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSMSToolsPackage.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Windows\Interfaces\IBaseWindow.cs" />
+    <Compile Include="Windows\Interfaces\IMultiDbQueryRunnerWIndow.cs" />
     <Compile Include="Windows\MultiDbQueryRunner\MultiDbQueryRunnerWindow.xaml.cs">
       <DependentUpon>MultiDbQueryRunnerWindow.xaml</DependentUpon>
     </Compile>

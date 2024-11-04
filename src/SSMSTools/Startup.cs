@@ -3,8 +3,12 @@ using EnvDTE80;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SqlServer.Management.UI.VSIntegration.ObjectExplorer;
 using Microsoft.VisualStudio.Shell;
+using SSMSTools.Factories;
+using SSMSTools.Factories.Interfaces;
 using SSMSTools.Managers;
 using SSMSTools.Managers.Interfaces;
+using SSMSTools.Windows.Interfaces;
+using SSMSTools.Windows.MultiDbQueryRunner;
 using System;
 
 namespace SSMSTools
@@ -23,6 +27,8 @@ namespace SSMSTools
             var serviceCollection = new ServiceCollection();
             RegisterManagers(serviceCollection);
             RegisterServices(serviceCollection);
+            RegisterWindows(serviceCollection);
+            RegisterFactories(serviceCollection);
 
             // Build the service provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -47,6 +53,16 @@ namespace SSMSTools
             {
                 return _package.GetServiceAsync(typeof(IObjectExplorerService)).Result as IObjectExplorerService;
             });
+        }
+
+        private void RegisterWindows(IServiceCollection services)
+        {
+            services.AddTransient<IMultiDbQueryRunnerWIndow, MultiDbQueryRunnerWindow>();
+        }
+
+        private void RegisterFactories(IServiceCollection services)
+        {
+            services.AddTransient<IWindowFactory, WindowFactory>();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using EnvDTE;
 using EnvDTE80;
+using SSMSTools.Managers.Interfaces;
 using SSMSTools.Models;
+using SSMSTools.Windows.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,14 +13,15 @@ using System.Windows;
 
 namespace SSMSTools.Windows.MultiDbQueryRunner
 {
-    public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged
+    public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged, IMultiDbQueryRunnerWIndow
     {
         public ObservableCollection<CheckboxItem> Items { get; private set; }
 
         private bool _isAllSelected;
         private bool _isUpdating;
         private string _queryContent;
-        private DTE2 _dte;
+        private readonly DTE2 _dte;
+        private readonly IMessageManager _messageManager;
 
         public bool IsAllSelected
         {
@@ -49,12 +52,20 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             }
         }
 
-        public MultiDbQueryRunnerWindow()
+        public MultiDbQueryRunnerWindow(
+            DTE2 dte,
+            IMessageManager messageManager)
         {
+            _dte = dte;
+            _messageManager = messageManager;
             InitializeComponent();
             DataContext = this;
         }
 
+        /// <summary>
+        /// Updates the list of available database items
+        /// </summary>
+        /// <param name="items"></param>
         public void SetItems(IEnumerable<CheckboxItem> items)
         {
             Items = new ObservableCollection<CheckboxItem>(items);
@@ -66,11 +77,6 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             // Re-set DataContext to refresh bindings
             DataContext = null;
             DataContext = this;
-        }
-
-        public void SetEnvDte(DTE2 dte)
-        {
-            _dte = dte;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -129,6 +135,10 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             Close();
         }
 
+        /// <summary>
+        /// Tries to open a new query window and writes the specified content in the newly created window
+        /// </summary>
+        /// <param name="content"></param>
         private void OpenNewQueryWindow(string content)
         {
             try
@@ -154,7 +164,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error creating new query window: {ex.Message}");
+                _messageManager.ShowSimpleMessageBox($"Error creating new query window: {ex.Message}");
             }
         }
     }

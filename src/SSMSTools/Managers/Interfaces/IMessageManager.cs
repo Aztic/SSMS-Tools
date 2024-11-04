@@ -2,8 +2,9 @@
 
 namespace SSMSTools.Managers.Interfaces
 {
-    internal interface IMessageManager
+    public interface IMessageManager
     {
         void ShowMessageBox(IServiceProvider serviceProvider, string title, string message);
+        void ShowSimpleMessageBox(string content);
     }
 }

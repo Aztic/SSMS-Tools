@@ -1,18 +1,17 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Globalization;
-using EnvDTE80;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 using Microsoft.SqlServer.Management.UI.VSIntegration.ObjectExplorer;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using SSMSTools.Managers.Interfaces;
-using SSMSTools.Windows.MultiDbQueryRunner;
 using SSMSTools.Models;
+using SSMSTools.Factories.Interfaces;
+using SSMSTools.Windows.Interfaces;
+using SSMSTools.Exceptions;
 
 namespace SSMSTools.Commands.MultiDbQueryRunner
 {
@@ -20,7 +19,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
     {
         private readonly IObjectExplorerService _objectExplorerService;
         private readonly IMessageManager _messageManager;
-        private readonly DTE2 _dte;
+        private readonly IWindowFactory _windowFactory;
 
         /// <summary>
         /// Command ID.
@@ -53,7 +52,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
 
             _objectExplorerService = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IObjectExplorerService)) as IObjectExplorerService;
             _messageManager = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IMessageManager)) as IMessageManager;
-            _dte = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(DTE2)) as DTE2;
+            _windowFactory = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IWindowFactory)) as IWindowFactory;
 
             commandService.AddCommand(menuItem);
         }
@@ -119,18 +118,26 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
 
                 databases = connectionDatabases.Select(x => new CheckboxItem { Name = x });
             }
-            catch(Exception ex)
+            catch(OnlyOneObjectExplorerNodeAllowedException)
             {
                 _messageManager.ShowMessageBox(this.package, title, "Only one node needs to be selected");
                 return;
             }
+            catch(Exception ex)
+            {
+                _messageManager.ShowMessageBox(this.package, title, "Unknown exception");
+                return;
+            }
 
-            var window = new MultiDbQueryRunnerWindow();
+            var window = _windowFactory.CreateWindow<IMultiDbQueryRunnerWIndow>();
             window.SetItems(databases);
-            window.SetEnvDte(_dte);
             window.Show();
         }
 
+        /// <summary>
+        /// Gets the connection string from the selected nodes
+        /// </summary>
+        /// <returns></returns>
         private List<string> GetConnectedServers()
         {
             var usedConnections = new HashSet<string>();
@@ -140,7 +147,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             _objectExplorerService.GetSelectedNodes(out arraySize, out nodes);
             if (arraySize != 1)
             {
-                throw new Exception("Only one node needs to be selected");
+                throw new OnlyOneObjectExplorerNodeAllowedException("Only one node needs to be selected");
             }
             foreach (var node in nodes)
             {
@@ -156,6 +163,12 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             return new List<string>(usedConnections);
         }
 
+        /// <summary>
+        /// Given a connection string, gets the list of available databases.
+        /// It creates a new connection with the server and retrieves them
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
         private List<string> GetDatabasesFromConnection(string connectionString)
         {
             var databases = new List<string>();
@@ -180,8 +193,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., permissions, connectivity)
-                System.Windows.Forms.MessageBox.Show($"Error fetching databases for linked server: {ex.Message}");
+                _messageManager.ShowMessageBox(this.package, nameof(MultiDbQueryRunner), $"Error fetching databases for linked server: {ex.Message}");
             }
 
             return databases;

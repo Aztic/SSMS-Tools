@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using SSMSTools.Managers.Interfaces;
 using System;
+using System.Windows;
 
 namespace SSMSTools.Managers
 {
@@ -16,6 +17,11 @@ namespace SSMSTools.Managers
                 OLEMSGICON.OLEMSGICON_INFO,
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        public void ShowSimpleMessageBox(string content)
+        {
+            MessageBox.Show(content);
         }
     }
 }
