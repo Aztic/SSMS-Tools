@@ -5,8 +5,9 @@
         <DisplayName>SSMSTools</DisplayName>
         <Description xml:space="preserve">Tools to improve SSMS</Description>
     </Metadata>
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0, 16.0)" />
+    <Installation AllUsers="true">
+        <InstallationTarget Version="[15.0,20.2)" Id="SQL Server Management Studio" />
+        <InstallationTarget Id="ssms" Version="[15.0, 20.2)" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />

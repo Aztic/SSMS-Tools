@@ -6,15 +6,17 @@ Set of tools to improve my own experience using SSMS
 
 ## Tools
 - Multi Db Query runner
+
+
 [Demo](https://github.com/user-attachments/assets/cfe159fe-98b8-4e32-861d-cbc3b4f20214)
 
 Generates a query to be executed in the selected databases of the server
 
 # Setup
-- Download the latest VSIX file
+- Download the latest zip file with the content
 - Go to your install path and its `Extensions` subfolder (for example: `C:\Program Files (x86)\Microsoft SQL Server Management Studio 20\Common7\IDE\Extensions`)
 - Create a `SSMSTools` folder
-- Paste the vsix file
+- Paste the content of the zip file inside the folder
 
 ## Development
 ### Requirements
