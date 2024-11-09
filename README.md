@@ -30,7 +30,6 @@ Inside the solution, you need to change two paths:
 Both have paths that, although common, might differ from your local development
 
 ## TODO
-- Unit test project
 - Improve UI / UX
 - Pipeline
 - In-Memory multi db runner command to display the result
