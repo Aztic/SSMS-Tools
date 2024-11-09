@@ -5,6 +5,12 @@ VisualStudioVersion = 15.0.34829.251
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSMSTools", "src\SSMSTools\SSMSTools.csproj", "{F0B999EF-B16B-4B9B-BDFB-CFBBD3159599}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FF94B08-9F6C-4865-A430-9E809F89E275}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE28A152-C824-4AB1-A711-9154FE89BA93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSMSTools.UnitTests", "test\SSMSTools.UnitTests\SSMSTools.UnitTests.csproj", "{C2018E70-2A4E-4B3C-8017-936BAEABD6BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +21,17 @@ Global
 		{F0B999EF-B16B-4B9B-BDFB-CFBBD3159599}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0B999EF-B16B-4B9B-BDFB-CFBBD3159599}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0B999EF-B16B-4B9B-BDFB-CFBBD3159599}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2018E70-2A4E-4B3C-8017-936BAEABD6BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2018E70-2A4E-4B3C-8017-936BAEABD6BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2018E70-2A4E-4B3C-8017-936BAEABD6BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2018E70-2A4E-4B3C-8017-936BAEABD6BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F0B999EF-B16B-4B9B-BDFB-CFBBD3159599} = {4FF94B08-9F6C-4865-A430-9E809F89E275}
+		{C2018E70-2A4E-4B3C-8017-936BAEABD6BD} = {CE28A152-C824-4AB1-A711-9154FE89BA93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71917769-188E-43CD-8E00-9D2B42357E92}

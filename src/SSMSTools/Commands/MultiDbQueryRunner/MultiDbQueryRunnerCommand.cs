@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 using Microsoft.SqlServer.Management.UI.VSIntegration.ObjectExplorer;
@@ -12,6 +11,7 @@ using SSMSTools.Models;
 using SSMSTools.Factories.Interfaces;
 using SSMSTools.Windows.Interfaces;
 using SSMSTools.Exceptions;
+using SSMSTools.Services.Interfaces;
 
 namespace SSMSTools.Commands.MultiDbQueryRunner
 {
@@ -20,6 +20,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         private readonly IObjectExplorerService _objectExplorerService;
         private readonly IMessageManager _messageManager;
         private readonly IWindowFactory _windowFactory;
+        private readonly IUIService _uiService;
 
         /// <summary>
         /// Command ID.
@@ -42,7 +43,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private MultiDbQueryRunnerCommand(AsyncPackage package, OleMenuCommandService commandService)
+        internal MultiDbQueryRunnerCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -53,6 +54,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             _objectExplorerService = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IObjectExplorerService)) as IObjectExplorerService;
             _messageManager = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IMessageManager)) as IMessageManager;
             _windowFactory = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IWindowFactory)) as IWindowFactory;
+            _uiService = ((SSMSToolsPackage)package).ServiceProvider.GetService(typeof(IUIService)) as IUIService;
 
             commandService.AddCommand(menuItem);
         }
@@ -98,9 +100,9 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void Execute(object sender, EventArgs e)
+        internal void Execute(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            _uiService.ValidateUIThread();
             string title = "MultiDbQueryRunner";
             IEnumerable<CheckboxItem> databases = Enumerable.Empty<CheckboxItem>();
 
