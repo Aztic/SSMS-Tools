@@ -50,7 +50,7 @@ namespace SSMSTools.UnitTests.Commands.MultiDbQueryRunner
             }
 
             [Fact]
-            public async Task Execute_NoDatabasesAvailable_ShowMessageBox()
+            public void Execute_NoDatabasesAvailable_ShowMessageBox()
             {
                 // Arrange
                 var nodeInformationMock = new Mock<INodeInformation>();
@@ -77,7 +77,7 @@ namespace SSMSTools.UnitTests.Commands.MultiDbQueryRunner
             }
 
             [Fact]
-            public async Task Execute_MoreThanOneNodeSelected_SHowMessageBox()
+            public void Execute_MoreThanOneNodeSelected_SHowMessageBox()
             {
                 // Arrange
                 _objectExplorerServiceMock.Setup(service => service.GetSelectedNodes(out It.Ref<int>.IsAny, out It.Ref<INodeInformation[]>.IsAny))
@@ -95,7 +95,7 @@ namespace SSMSTools.UnitTests.Commands.MultiDbQueryRunner
             }
 
             [Fact]
-            public async Task Execute_UnknownException_HandleTheExceptionAndShowMessageBox()
+            public void Execute_UnknownException_HandleTheExceptionAndShowMessageBox()
             {
                 // Arrange
                 _objectExplorerServiceMock.Setup(service => service.GetSelectedNodes(out It.Ref<int>.IsAny, out It.Ref<INodeInformation[]>.IsAny))
