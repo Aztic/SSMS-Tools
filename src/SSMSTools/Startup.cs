@@ -7,6 +7,8 @@ using SSMSTools.Factories;
 using SSMSTools.Factories.Interfaces;
 using SSMSTools.Managers;
 using SSMSTools.Managers.Interfaces;
+using SSMSTools.Services;
+using SSMSTools.Services.Interfaces;
 using SSMSTools.Windows.Interfaces;
 using SSMSTools.Windows.MultiDbQueryRunner;
 using System;
@@ -53,6 +55,8 @@ namespace SSMSTools
             {
                 return _package.GetServiceAsync(typeof(IObjectExplorerService)).Result as IObjectExplorerService;
             });
+
+            services.AddSingleton<IUIService, UIService>();
         }
 
         private void RegisterWindows(IServiceCollection services)

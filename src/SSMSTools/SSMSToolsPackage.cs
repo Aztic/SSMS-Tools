@@ -30,14 +30,14 @@ namespace SSMSTools
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(SSMSToolsPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class SSMSToolsPackage : AsyncPackage
+    public class SSMSToolsPackage : AsyncPackage
     {
         /// <summary>
         /// SSMSToolsPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "b9f474c1-a282-4160-a9fa-80ff4d5b6a08";
         private System.IServiceProvider _serviceProvider;
-        public System.IServiceProvider ServiceProvider => _serviceProvider;
+        public virtual System.IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SSMSToolsPackage"/> class.

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSMSTools.UnitTests", "SSMSTools.UnitTests.csproj", "{B0BA8A94-C640-4BC3-BCA0-B52884A0D53D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0BA8A94-C640-4BC3-BCA0-B52884A0D53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BA8A94-C640-4BC3-BCA0-B52884A0D53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BA8A94-C640-4BC3-BCA0-B52884A0D53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BA8A94-C640-4BC3-BCA0-B52884A0D53D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30480CF6-F2A9-4355-986E-ABE439F9177F}
+	EndGlobalSection
+EndGlobal
