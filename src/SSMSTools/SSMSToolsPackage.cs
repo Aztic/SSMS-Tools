@@ -2,9 +2,15 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.SqlServer.Management.UI.VSIntegration.ObjectExplorer;
 using Microsoft.VisualStudio.Shell;
 using SSMSTools.Commands.MultiDbQueryRunner;
 using Task = System.Threading.Tasks.Task;
+using System.Windows.Forms;
+using System.Reflection;
+using System.Collections.ObjectModel;
+using Microsoft.VisualStudio;
+using System.Linq;
 
 namespace SSMSTools
 {
@@ -29,6 +35,7 @@ namespace SSMSTools
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(SSMSToolsPackage.PackageGuidString)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public class SSMSToolsPackage : AsyncPackage
     {
@@ -38,6 +45,11 @@ namespace SSMSTools
         public const string PackageGuidString = "b9f474c1-a282-4160-a9fa-80ff4d5b6a08";
         private System.IServiceProvider _serviceProvider;
         public virtual System.IServiceProvider ServiceProvider => _serviceProvider;
+
+
+        private IObjectExplorerService _objectExplorerService;
+        private TreeView _treeView;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SSMSToolsPackage"/> class.
@@ -63,11 +75,62 @@ namespace SSMSTools
         {
             var startup = new Startup(this);
             _serviceProvider = startup.ConfigureServices();
+            _objectExplorerService = (IObjectExplorerService)(await GetServiceAsync(typeof(IObjectExplorerService)));
+
+            var objectExplorerTree = _objectExplorerService
+                .GetType()
+                .GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+                .FirstOrDefault(prop => string.Equals(prop.Name, "tree", StringComparison.OrdinalIgnoreCase));
+
+            _treeView = objectExplorerTree != null ? (TreeView)objectExplorerTree.GetValue(_objectExplorerService, null) : null;
 
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await MultiDbQueryRunnerCommand.InitializeAsync(this);
+
+            _treeView.ContextMenuStripChanged += TreeView_ContextMenuStripChanged;
+        }
+
+        private void TreeView_ContextMenuStripChanged(object sender, EventArgs e)
+        {
+            if (_treeView?.ContextMenuStrip?.Items == null || _objectExplorerService == null)
+            {
+                return;
+            }
+
+            ToolStripMenuItem packageContextMenu = new ToolStripMenuItem(nameof(SSMSTools));
+
+            var menuItems = new Collection<ToolStripMenuItem>
+            {
+                new ToolStripMenuItem
+                {
+                    Text = "Run query in multiple Databases",
+                    Tag = nameof(MultiDbQueryRunnerCommand)
+                }
+            };
+
+            foreach (var menuItem in menuItems)
+            {
+                menuItem.Click += MenuItem_Click;
+                packageContextMenu.DropDownItems.Add(menuItem);
+            }
+            
+            _treeView.ContextMenuStrip.Items.Add(packageContextMenu);
+        }
+
+        private void MenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem menuItem)
+            {
+                var commandName = menuItem.Tag.ToString();
+                switch (commandName)
+                {
+                    case nameof(MultiDbQueryRunnerCommand):
+                        MultiDbQueryRunnerCommand.Instance.Execute(null, null);
+                        break;
+                }
+            }
         }
 
         #endregion
