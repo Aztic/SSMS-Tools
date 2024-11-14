@@ -4,7 +4,6 @@ using SSMSTools.Managers.Interfaces;
 using SSMSTools.Models;
 using SSMSTools.Windows.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -15,7 +14,8 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
 {
     public partial class MultiDbQueryRunnerWindow : System.Windows.Window, INotifyPropertyChanged, IMultiDbQueryRunnerWindow
     {
-        public ObservableCollection<CheckboxItem> Items { get; private set; }
+        public ObservableCollection<CheckboxItem> Databases { get; private set; }
+        public string ServerName { get; private set; }
 
         private bool _isAllSelected;
         private bool _isUpdating;
@@ -66,10 +66,11 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         /// Updates the list of available database items
         /// </summary>
         /// <param name="items"></param>
-        public void SetItems(IEnumerable<CheckboxItem> items)
+        public void SetServerInformation(ConnectedServerInformation serverInformation)
         {
-            Items = new ObservableCollection<CheckboxItem>(items);
-            foreach (var item in items)
+            ServerName = serverInformation.ServerName;
+            Databases = new ObservableCollection<CheckboxItem>(serverInformation.Databases);
+            foreach (var item in serverInformation.Databases)
             {
                 item.PropertyChanged += Item_PropertyChanged;
             }
@@ -87,7 +88,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             {
                 // Update IsAllSelected based on current item selections if we're not in a bulk update
                 _isUpdating = true;
-                IsAllSelected = Items.All(item => item.IsSelected);
+                IsAllSelected = Databases.All(item => item.IsSelected);
                 _isUpdating = false;
             }
         }
@@ -96,7 +97,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         {
             // Set the _isUpdating flag to true to prevent recursion
             _isUpdating = true;
-            foreach (var item in Items)
+            foreach (var item in Databases)
             {
                 item.IsSelected = isSelected;
             }
@@ -110,7 +111,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         {
             // Implement the logic to handle the "Execute" action
             var content = new StringBuilder();
-            foreach (var database in Items)
+            foreach (var database in Databases)
             {
                 if (database.IsSelected)
                 {
@@ -128,7 +129,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             QueryContent = string.Empty;
-            foreach (var item in Items)
+            foreach (var item in Databases)
             {
                 item.IsSelected = false;
             }

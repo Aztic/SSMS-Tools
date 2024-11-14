@@ -3,13 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="430.721" Width="426.144"
+        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="496.054" Width="420.811"
         >
     <Grid Margin="0,0,0,-188">
         <StackPanel Margin="10">
+            <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Left" Margin="0,10,0,0">
+                <Label
+                    Padding="0,5,5,0"
+                    FontSize="14"
+                    FontWeight="Bold">
+                    Selected server:
+                </Label>
+                <Label 
+                    Padding="0,5,5,5"
+                    FontSize="12" 
+                    Content="{Binding ServerName}" />
+            </StackPanel>
             <Label
+                Padding="0,5,5,5"
+                FontWeight="Bold"
                 FontSize="14">
-                Databases
+                Databases:
             </Label>
             <!-- Select All Checkbox -->
             <CheckBox Content="Select All"
@@ -19,7 +33,7 @@
 
             <!-- Scrollable List of Items -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150">
-                <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl ItemsSource="{Binding Databases}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Name}"
@@ -30,8 +44,10 @@
             </ScrollViewer>
 
             <Label
+                FontWeight="Bold"
                 FontSize="14"
-                >Script content</Label>
+                Padding="0,5,5,5"
+                >Script content:</Label>
 
             <!-- Multiline TextBox below the list -->
             <TextBox AcceptsReturn="True"

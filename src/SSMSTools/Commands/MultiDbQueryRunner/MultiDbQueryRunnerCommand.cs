@@ -22,6 +22,12 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         private readonly IWindowFactory _windowFactory;
         private readonly IUIService _uiService;
 
+        private struct ConnectedServer
+        {
+            public string ServerName { get; set; }
+            public string ConnectionString { get; set; }
+        }
+
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -104,12 +110,13 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         {
             _uiService.ValidateUIThread();
             string title = "MultiDbQueryRunner";
-            IEnumerable<CheckboxItem> databases = Enumerable.Empty<CheckboxItem>();
+            string serverName = string.Empty;
+            var serverInformation = new ConnectedServerInformation();
 
             try
             {
-                var connections = GetConnectedServers();
-                var connectionDatabases = GetDatabasesFromConnection(connections.Single());
+                var connection = GetConnectedServers().Single();
+                var connectionDatabases = GetDatabasesFromConnection(connection.ConnectionString);
                 if (!connectionDatabases.Any())
                 {
                     // Show a message box to prove we were here
@@ -117,7 +124,8 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
                     return;
                 }
 
-                databases = connectionDatabases.Select(x => new CheckboxItem { Name = x });
+                serverInformation.ServerName = connection.ServerName;
+                serverInformation.Databases = connectionDatabases.Select(x => new CheckboxItem { Name = x });
             }
             catch(OnlyOneObjectExplorerNodeAllowedException)
             {
@@ -131,7 +139,7 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             }
 
             var window = _windowFactory.CreateWindow<IMultiDbQueryRunnerWindow>();
-            window.SetItems(databases);
+            window.SetServerInformation(serverInformation);
             window.Show();
         }
 
@@ -139,9 +147,10 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
         /// Gets the connection string from the selected nodes
         /// </summary>
         /// <returns></returns>
-        private List<string> GetConnectedServers()
+        private List<ConnectedServer> GetConnectedServers()
         {
-            var usedConnections = new HashSet<string>();
+            var usedServers = new HashSet<string>();
+            var connections = new List<ConnectedServer>();
 
             int arraySize;
             INodeInformation[] nodes = new INodeInformation[10];
@@ -153,15 +162,21 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
             foreach (var node in nodes)
             {
                 var connectionString = node.Connection.ConnectionString;
-                if (usedConnections.Contains(connectionString))
+                var serverName = node.Connection.ServerName;
+                if (usedServers.Contains(serverName))
                 {
                     continue;
                 }
 
-                usedConnections.Add(connectionString);
+                usedServers.Add(serverName);
+                connections.Add(new ConnectedServer
+                {
+                    ServerName = serverName,
+                    ConnectionString = connectionString
+                });
             }
 
-            return new List<string>(usedConnections);
+            return connections;
         }
 
         /// <summary>
