@@ -64,6 +64,7 @@
     <Compile Include="Managers\Interfaces\IMessageManager.cs" />
     <Compile Include="Managers\MessageManager.cs" />
     <Compile Include="Models\CheckboxItem.cs" />
+    <Compile Include="Models\ConnectedServerInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IUIService.cs" />
     <Compile Include="Services\UIService.cs" />
