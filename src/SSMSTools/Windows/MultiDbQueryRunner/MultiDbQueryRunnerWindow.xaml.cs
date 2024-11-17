@@ -4,6 +4,7 @@ using SSMSTools.Managers.Interfaces;
 using SSMSTools.Models;
 using SSMSTools.Windows.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -17,11 +18,37 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         public ObservableCollection<CheckboxItem> Databases { get; private set; }
         public string ServerName { get; private set; }
 
+        private bool _isShowSystemDatabasesSelected;
         private bool _isAllSelected;
         private bool _isUpdating;
         private string _queryContent;
         private readonly DTE2 _dte;
         private readonly IMessageManager _messageManager;
+        private readonly ISet<string> _systemDatabases = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "master",
+            "tempdb",
+            "model",
+            "msdb"
+        };
+
+        public bool IsShowSystemDatabasesSelected
+        {
+            get => _isShowSystemDatabasesSelected;
+            set
+            {
+                if (_isShowSystemDatabasesSelected != value)
+                {
+                    _isShowSystemDatabasesSelected = value;
+                    OnPropertyChanged(nameof(IsShowSystemDatabasesSelected));
+
+                    if (!_isUpdating)
+                    {
+                        UpdateShowSystemDatabases(value);
+                    }
+                }
+            }
+        }
 
         public bool IsAllSelected
         {
@@ -72,6 +99,8 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             Databases = new ObservableCollection<CheckboxItem>(serverInformation.Databases);
             foreach (var item in serverInformation.Databases)
             {
+                item.IsVisible = _systemDatabases.Contains(item.Name) ?
+                    _isShowSystemDatabasesSelected : true;
                 item.PropertyChanged += Item_PropertyChanged;
             }
 
@@ -91,6 +120,19 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
                 IsAllSelected = Databases.All(item => item.IsSelected);
                 _isUpdating = false;
             }
+        }
+
+        private void UpdateShowSystemDatabases(bool systemDatabasesVisible)
+        {
+            _isUpdating = true;
+            foreach (var item in Databases)
+            {
+                if (_systemDatabases.Contains(item.Name))
+                {
+                    item.IsVisible = systemDatabasesVisible;
+                }
+            }
+            _isUpdating = false;
         }
 
         private void UpdateAllItemsSelection(bool isSelected)
@@ -113,7 +155,7 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             var content = new StringBuilder();
             foreach (var database in Databases)
             {
-                if (database.IsSelected)
+                if (database.IsSelected && database.IsVisible)
                 {
                     content.Append($"USE {database.Name}\n");
                     content.Append($"Print 'Running query in {database.Name}'\n");

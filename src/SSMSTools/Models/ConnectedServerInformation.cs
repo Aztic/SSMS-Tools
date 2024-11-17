@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace SSMSTools.Models
 {
     public class ConnectedServerInformation
     {
         public string ServerName { get; set; }
-        public IEnumerable<CheckboxItem> Databases { get; set; } = Enumerable.Empty<CheckboxItem>();
+        public ICollection<CheckboxItem> Databases { get; set; } = new Collection<CheckboxItem>();
     }
 }

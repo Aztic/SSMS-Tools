@@ -119,13 +119,12 @@ namespace SSMSTools.Commands.MultiDbQueryRunner
                 var connectionDatabases = GetDatabasesFromConnection(connection.ConnectionString);
                 if (!connectionDatabases.Any())
                 {
-                    // Show a message box to prove we were here
                     _messageManager.ShowMessageBox(this.package, title, "The connection has no available databases");
                     return;
                 }
 
                 serverInformation.ServerName = connection.ServerName;
-                serverInformation.Databases = connectionDatabases.Select(x => new CheckboxItem { Name = x });
+                serverInformation.Databases = connectionDatabases.Select(x => new CheckboxItem { Name = x }).ToArray();
             }
             catch(OnlyOneObjectExplorerNodeAllowedException)
             {
