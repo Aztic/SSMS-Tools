@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="496.054" Width="420.811"
+        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="540.721" Width="420.811"
         >
     <Grid Margin="0,0,0,-188">
         <StackPanel Margin="10">
@@ -26,6 +26,11 @@
                 Databases:
             </Label>
             <!-- Select All Checkbox -->
+            <CheckBox Content="Show system databases"
+                  IsChecked="{Binding IsShowSystemDatabasesSelected, Mode=TwoWay}"
+                      FontSize="12"
+                  Margin="0,0,0,10"/>
+            <!-- Select All Checkbox -->
             <CheckBox Content="Select All"
                   IsChecked="{Binding IsAllSelected, Mode=TwoWay}"
                       FontSize="12"
@@ -37,7 +42,18 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Name}"
-                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                                  IsChecked="{Binding IsSelected, Mode=TwoWay}">
+                                <CheckBox.Style>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

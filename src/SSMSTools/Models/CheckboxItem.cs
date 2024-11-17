@@ -5,6 +5,7 @@ namespace SSMSTools.Models
     public class CheckboxItem : INotifyPropertyChanged
     {
         private bool _isSelected;
+        private bool _isVisible;
 
         public string Name { get; set; }
 
@@ -15,6 +16,16 @@ namespace SSMSTools.Models
             {
                 _isSelected = value;
                 OnPropertyChanged(nameof(IsSelected));
+            }
+        }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged(nameof(IsVisible));
             }
         }
 
