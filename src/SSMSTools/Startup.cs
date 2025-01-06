@@ -9,9 +9,11 @@ using SSMSTools.Managers;
 using SSMSTools.Managers.Interfaces;
 using SSMSTools.Services;
 using SSMSTools.Services.Interfaces;
+using SSMSTools.Windows.DatabaseGroupManager;
 using SSMSTools.Windows.Interfaces;
 using SSMSTools.Windows.MultiDbQueryRunner;
 using System;
+using ConfigurationManager = SSMSTools.Managers.ConfigurationManager;
 
 namespace SSMSTools
 {
@@ -40,6 +42,7 @@ namespace SSMSTools
         private void RegisterManagers(IServiceCollection services)
         {
             services.AddTransient<IMessageManager, MessageManager>();
+            services.AddSingleton<IConfigurationManager, ConfigurationManager>();
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -62,6 +65,7 @@ namespace SSMSTools
         private void RegisterWindows(IServiceCollection services)
         {
             services.AddTransient<IMultiDbQueryRunnerWindow, MultiDbQueryRunnerWindow>();
+            services.AddTransient<IDatabaseGroupManagerWindow, DatabaseGroupManagerWindow>();
         }
 
         private void RegisterFactories(IServiceCollection services)

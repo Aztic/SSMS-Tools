@@ -4,7 +4,7 @@ using System;
 
 namespace SSMSTools.Factories
 {
-    internal class WindowFactory: IWindowFactory
+    public class WindowFactory: IWindowFactory
     {
         private readonly IServiceProvider _serviceProvider;
 

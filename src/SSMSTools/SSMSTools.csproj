@@ -58,19 +58,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\MultiDbQueryRunner\MultiDbQueryRunnerCommand.cs" />
+    <Compile Include="Configurations\SavedDatabaseGroups\SavedDatabaseGroup.cs" />
+    <Compile Include="Configurations\SavedDatabaseGroups\SavedDatabaseGroupsConfiguration.cs" />
+    <Compile Include="Constants\ConfigurationFiles.cs" />
+    <Compile Include="Events\Arguments\DatabaseGroupSavedEventArgs.cs" />
     <Compile Include="Exceptions\OnlyOneObjectExplorerNodeAllowedException.cs" />
     <Compile Include="Factories\Interfaces\IWindowFactory.cs" />
     <Compile Include="Factories\WindowFactory.cs" />
+    <Compile Include="Managers\ConfigurationManager.cs" />
+    <Compile Include="Managers\Interfaces\IConfigurationManager.cs" />
     <Compile Include="Managers\Interfaces\IMessageManager.cs" />
     <Compile Include="Managers\MessageManager.cs" />
+    <Compile Include="Mappers\DatabaseGroupMapper.cs" />
     <Compile Include="Models\CheckboxItem.cs" />
     <Compile Include="Models\ConnectedServerInformation.cs" />
+    <Compile Include="Models\DatabaseGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IUIService.cs" />
     <Compile Include="Services\UIService.cs" />
     <Compile Include="SSMSToolsPackage.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Windows\DatabaseGroupManager\DatabaseGroupManagerWindow.xaml.cs">
+      <DependentUpon>DatabaseGroupManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Interfaces\IBaseWindow.cs" />
+    <Compile Include="Windows\Interfaces\IDatabaseGroupManagerWindow.cs" />
     <Compile Include="Windows\Interfaces\IMultiDbQueryRunnerWindow.cs" />
     <Compile Include="Windows\MultiDbQueryRunner\MultiDbQueryRunnerWindow.xaml.cs">
       <DependentUpon>MultiDbQueryRunnerWindow.xaml</DependentUpon>
@@ -416,6 +428,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Windows\DatabaseGroupManager\DatabaseGroupManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MultiDbQueryRunner\MultiDbQueryRunnerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
