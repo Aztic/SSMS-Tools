@@ -32,5 +32,15 @@ namespace SSMSTools.Models
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public CheckboxItem Clone()
+        {
+            return new CheckboxItem
+            {
+                IsSelected = _isSelected,
+                IsVisible = _isVisible,
+                Name = Name
+            };
+        }
     }
 }

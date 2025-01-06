@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="540.721" Width="420.811"
+        xmlns:local="clr-namespace:SSMSTools.Windows.MultiDbQueryRunner" Height="595.388" Width="418.811"
         >
     <Grid Margin="0,0,0,-188">
         <StackPanel Margin="10">
@@ -25,7 +25,33 @@
                 FontSize="14">
                 Databases:
             </Label>
-            <!-- Select All Checkbox -->
+            <StackPanel>
+                <Label
+                Padding="0,5,5,5"
+                FontWeight="Bold"
+                FontSize="11">
+                    Saved groups:
+                </Label>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox Margin="0,10,10,10" Width="310"
+                              Name="DatabaseGroupsCombobox"
+                              ItemsSource="{Binding Path=DatabaseGroups}"
+                              DisplayMemberPath="Title"
+                              SelectedValue="{Binding Path=SelectedDatabaseGroup, Mode=TwoWay}">
+
+                    </ComboBox>
+                    <Button Click="EditButton_Click"
+                            Name="EditButton"
+                            Padding="10,0,10,0"
+                            Height="23"
+                            IsEnabled="False"
+                            Visibility="Hidden">
+                        Create
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            
+            <!-- Show system databases Checkbox -->
             <CheckBox Content="Show system databases"
                   IsChecked="{Binding IsShowSystemDatabasesSelected, Mode=TwoWay}"
                       FontSize="12"
