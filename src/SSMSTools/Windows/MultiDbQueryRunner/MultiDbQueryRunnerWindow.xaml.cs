@@ -300,8 +300,8 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
             {
                 if (database.IsSelected && database.IsVisible)
                 {
-                    content.Append($"USE {database.Name}\n");
-                    content.Append($"Print 'Running query in {database.Name}'\n");
+                    content.Append($"USE [{database.Name}]\n");
+                    content.Append($"Print 'Running query in [{database.Name}]'\n");
                     content.Append(QueryContent);
                     content.Append("\n\n");
                 }
@@ -357,9 +357,6 @@ namespace SSMSTools.Windows.MultiDbQueryRunner
         {
             if (SelectedDatabaseGroup != null)
             {
-                Console.WriteLine("Foo");
-                Console.WriteLine(SelectedDatabaseGroup.Title);
-
                 EditButton.Visibility = Visibility.Visible;
                 EditButton.Content = SelectedDatabaseGroup.Id.HasValue ? "Edit" : "Create";
                 EditButton.IsEnabled = true;
