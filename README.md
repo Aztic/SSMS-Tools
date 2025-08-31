@@ -1,5 +1,10 @@
+> **⚠️ Archived Repository Notice**
+>
+> This repository is no longer actively maintained and has been archived. The extension works with SSMS 20. Due to the shell change on SSMS 21, a separated repository was created: [SSMSTools-21](https://github.com/Aztic/SSMSTools-21)
+
 # SSMS-Tools
-Set of tools to improve my own experience using SSMS
+Set of tools to improve my own experience using SSMS 20
+
 
 ## Requirements
 - SQL Server Management Studio 20
